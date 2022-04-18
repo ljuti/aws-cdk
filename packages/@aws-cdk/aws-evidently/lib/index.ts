@@ -1,3 +1,4 @@
+export * from './launch';
 export * from './project';
 
 // AWS::Evidently CloudFormation Resources:
