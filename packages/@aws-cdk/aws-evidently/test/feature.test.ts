@@ -1,15 +1,18 @@
 import { Template } from '@aws-cdk/assertions';
 import { Stack } from '@aws-cdk/core';
-import { EntityOverride, Feature, VariationObject, VariationObjectValueType } from '../lib';
+import { EntityOverride, Feature, VariationObject, VariationObjectValueType, Project } from '../lib';
 
 
 describe('AWS Evidently Feature', () => {
   test('creating a new feature', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Feature(stack, 'NewFeature', {
       featureName: 'myNewFeature',
-      project: 'myProject',
+      project: project,
       variations: [],
     });
 
@@ -22,10 +25,13 @@ describe('AWS Evidently Feature', () => {
 
   test('feature from attributes', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     const feature = Feature.fromFeatureAttributes(stack, 'MyFeature', {
       featureArn: 'arn:aws:evidently:region:account-id:feature/my-feature',
-      project: 'arn:aws:evidently:region:account-id:project/my-project',
+      project: project,
       variations: [],
     });
 
@@ -36,10 +42,13 @@ describe('AWS Evidently Feature', () => {
 describe('Entity Overrides', () => {
   test('feature with an override', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Feature(stack, 'FeatureWithEntityOverride', {
       featureName: 'withOverrides',
-      project: 'arn:aws:evidently:region:account-id:feature/with-overrides',
+      project: project,
       variations: [
         new VariationObject({
           variationName: 'bar',
@@ -70,10 +79,13 @@ describe('Entity Overrides', () => {
 describe('Variations', () => {
   test('string type variation', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Feature(stack, 'MyFeature', {
       featureName: 'StringTypeVariationFeature',
-      project: 'arn:aws:evidently:region:account-id:project/my-project',
+      project: project,
       variations: [
         new VariationObject({
           variationName: 'String variation',
@@ -97,10 +109,13 @@ describe('Variations', () => {
 
   test('boolean type variation', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Feature(stack, 'MyFeature', {
       featureName: 'BooleanTypeVariationFeature',
-      project: 'arn:aws:evidently:region:account-id:project/my-project',
+      project: project,
       variations: [
         new VariationObject({
           variationName: 'Boolean variation',
@@ -124,10 +139,13 @@ describe('Variations', () => {
 
   test('double type variation', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Feature(stack, 'MyFeature', {
       featureName: 'DoubleTypeVariationFeature',
-      project: 'arn:aws:evidently:region:account-id:project/my-project',
+      project: project,
       variations: [
         new VariationObject({
           variationName: 'Double variation',
@@ -151,10 +169,13 @@ describe('Variations', () => {
 
   test('long type variation', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Feature(stack, 'MyFeature', {
       featureName: 'LongTypeVariationFeature',
-      project: 'arn:aws:evidently:region:account-id:project/my-project',
+      project: project,
       variations: [
         new VariationObject({
           variationName: 'Long variation',

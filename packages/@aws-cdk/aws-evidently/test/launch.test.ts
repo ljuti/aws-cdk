@@ -12,7 +12,7 @@ describe('An Evidently Launch resource', () => {
 
     new Launch(stack, 'TestLaunch', {
       launchName: 'myTestLaunch',
-      project: project.projectArn,
+      project: project,
       groups: [],
       scheduledSplitsConfig: [],
     });
@@ -34,7 +34,7 @@ describe('An Evidently Launch resource', () => {
 
     const launch = Launch.fromLaunchAttributes(stack, 'LaunchFromAttributes', {
       launchArn: 'arn:aws:evidently:region:account-id:launch/my-launch',
-      project: project.projectArn,
+      project: project,
       groups: [],
       scheduledSplitsConfig: [],
     });
@@ -53,7 +53,7 @@ describe('LaunchGroupObjects', () => {
 
     new Launch(stack, 'ValidLaunchGroupObjects', {
       launchName: 'aNewLaunch',
-      project: project.projectArn,
+      project: project,
       scheduledSplitsConfig: [],
       groups: [
         new LaunchGroupObject({
@@ -79,7 +79,7 @@ describe('LaunchGroupObjects', () => {
     expect(() => {
       new Launch(stack, 'ValidLaunchGroupObjects', {
         launchName: 'aNewLaunch',
-        project: project.projectArn,
+        project: project,
         scheduledSplitsConfig: [],
         groups: [...Array(6)].map(() =>
           new LaunchGroupObject({

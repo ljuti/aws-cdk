@@ -1,6 +1,7 @@
 import { Resource, IResource, Tag, Stack, ArnFormat } from '@aws-cdk/core';
 import { Construct } from 'constructs';
 import { CfnLaunch } from './evidently.generated';
+import { IProject } from './project';
 
 /**
  * An Evidently Launch resource
@@ -36,7 +37,7 @@ export interface ILaunch extends IResource {
   /**
    * The name or ARN of the project that you want to create the launch in.
    */
-  readonly project: string;
+  readonly project: IProject;
   /**
    * A randomization salt for generating an ID to determine which variation the user session is served.
    */
@@ -68,7 +69,7 @@ export interface LaunchAttributes {
   /**
    * The name or ARN of the project that you want to create the launch in.
    */
-  readonly project: string;
+  readonly project: IProject;
 
   /**
    * An array of structures that contains the feature and variations that are to be used for the launch.
@@ -89,7 +90,7 @@ abstract class LaunchBase extends Resource implements ILaunch {
   public abstract readonly launchArn: string;
   public abstract readonly launchName: string;
   public abstract readonly groups: LaunchGroupObject[];
-  public abstract readonly project: string;
+  public abstract readonly project: IProject;
   public abstract readonly scheduledSplitsConfig: StepConfig[];
 }
 
@@ -104,7 +105,7 @@ export interface LaunchProps {
   /**
    * The name or ARN of the project that you want to create the launch in.
    */
-  readonly project: string;
+  readonly project: IProject;
   /**
    * An array of structures that contains the feature and variations that are to be used for the launch.
    */
@@ -156,7 +157,7 @@ export class Launch extends LaunchBase {
   public readonly launchArn: string;
   public readonly launchName: string;
   public readonly groups: LaunchGroupObject[];
-  public readonly project: string;
+  public readonly project: IProject;
   public readonly scheduledSplitsConfig: StepConfig[];
 
   private readonly resource: CfnLaunch;
@@ -174,7 +175,7 @@ export class Launch extends LaunchBase {
 
     this.resource = new CfnLaunch(this, 'Resource', {
       name: props.launchName,
-      project: props.project,
+      project: props.project.projectArn,
       groups: this.renderGroups(groups),
       scheduledSplitsConfig,
     });

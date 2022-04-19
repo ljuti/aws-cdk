@@ -1,6 +1,7 @@
 import { Resource, IResource, Tag, Stack, ArnFormat } from '@aws-cdk/core';
 import { Construct } from 'constructs';
 import { CfnFeature } from './evidently.generated';
+import { IProject } from './project';
 
 /**
  * An Evidently Feature resource
@@ -53,9 +54,9 @@ export interface IFeature extends IResource {
   readonly featureName: string;
 
   /**
-   * The name or ARN of the project that is to contain the new feature
+   * An Evidently Project this feature belongs to
    */
-  readonly project: string;
+  readonly project: IProject;
 
   /**
    * Tags
@@ -78,9 +79,9 @@ export interface FeatureAttributes {
   readonly featureArn: string;
 
   /**
-   * The name or ARN of the project this feature belongs to
+   * An Evidently Project this feature belongs to
    */
-  readonly project: string;
+  readonly project: IProject;
 
   /**
    * Variations
@@ -94,7 +95,7 @@ export interface FeatureAttributes {
 abstract class FeatureBase extends Resource implements IFeature {
   public abstract readonly featureArn: string;
   public abstract readonly featureName: string;
-  public abstract readonly project: string;
+  public abstract readonly project: IProject;
   public abstract readonly variations: VariationObject[];
 }
 
@@ -108,9 +109,9 @@ export interface FeatureProps {
   readonly featureName: string;
 
   /**
-   * The name or ARN of the project that this feature belongs to
+   * An Evidently Project that this feature belongs to
    */
-  readonly project: string;
+  readonly project: IProject;
 
   /**
    * Variations
@@ -151,7 +152,7 @@ export class Feature extends FeatureBase {
 
   public readonly featureArn: string;
   public readonly featureName: string;
-  public readonly project: string;
+  public readonly project: IProject;
   public readonly variations: VariationObject[];
 
   private readonly resource: CfnFeature;
@@ -165,7 +166,7 @@ export class Feature extends FeatureBase {
 
     this.resource = new CfnFeature(this, 'Resource', {
       name: props.featureName,
-      project: props.project,
+      project: props.project.projectArn,
       variations: props.variations.map(variation => variation._renderVariation()),
       entityOverrides: props.entityOverrides?.map(override => override._renderEntityOverride()),
     });

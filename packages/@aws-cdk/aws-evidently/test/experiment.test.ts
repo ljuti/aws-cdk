@@ -1,14 +1,17 @@
 import { Template } from '@aws-cdk/assertions';
 import { Stack } from '@aws-cdk/core';
-import { Experiment, MetricGoal, OnlineAbConfig, Treatment, TreatmentToWeight } from '../lib';
+import { Experiment, MetricGoal, OnlineAbConfig, Project, Treatment, TreatmentToWeight } from '../lib';
 
 describe('AWS Evidently Experiment', () => {
   test('creating a new experiment', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Experiment(stack, 'NewExperiment', {
       experimentName: 'myExperiment',
-      project: 'myProject',
+      project: project,
       metricGoals: [],
       onlineAbConfig: new OnlineAbConfig({}),
       treatments: [],
@@ -18,17 +21,19 @@ describe('AWS Evidently Experiment', () => {
     template.resourceCountIs('AWS::Evidently::Experiment', 1);
     template.hasResourceProperties('AWS::Evidently::Experiment', {
       Name: 'myExperiment',
-      Project: 'myProject',
     });
   });
 
   test('experiment from attributes', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     const experiment = Experiment.fromExperimentAttributes(stack, 'MyExperiment', {
       experimentArn: 'arn:aws:evidently:region:account-id:project/my-project/experiment/my-experiment',
       experimentName: 'myExperiment',
-      project: 'arn:aws:evidently:region:account-id:project/my-project',
+      project: project,
       metricGoals: [],
       onlineAbConfig: new OnlineAbConfig({}),
       treatments: [],
@@ -43,10 +48,13 @@ describe('AWS Evidently Experiment', () => {
 describe('MetricGoals for an Experiment', () => {
   test('Experiment with one MetricGoal', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Experiment(stack, 'NewExperiment', {
       experimentName: 'experimentWithMetricGoal',
-      project: 'myProject',
+      project: project,
       metricGoals: [
         new MetricGoal({
           desiredChange: 'INCREASE',
@@ -76,10 +84,13 @@ describe('MetricGoals for an Experiment', () => {
 
   test('Experiment with maximum number of MetricGoals', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Experiment(stack, 'NewExperiment', {
       experimentName: 'experimentWithMetricGoal',
-      project: 'myProject',
+      project: project,
       metricGoals: [
         new MetricGoal({
           desiredChange: 'INCREASE',
@@ -137,11 +148,14 @@ describe('MetricGoals for an Experiment', () => {
 
   test('Experiment with illegal number of MetricGoals', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     expect(() => {
       new Experiment(stack, 'NewExperiment', {
         experimentName: 'experimentWithMetricGoal',
-        project: 'myProject',
+        project: project,
         metricGoals: [
           new MetricGoal({
             desiredChange: 'INCREASE',
@@ -182,10 +196,13 @@ describe('MetricGoals for an Experiment', () => {
 describe('Configuration object (OnlineAbConfig)', () => {
   test('experiment with a configuration object', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Experiment(stack, 'NewExperiment', {
       experimentName: 'experimentWithMetricGoal',
-      project: 'myProject',
+      project: project,
       metricGoals: [],
       onlineAbConfig: new OnlineAbConfig({
         controlTreatmentName: 'defaultTreatment',
@@ -205,10 +222,13 @@ describe('Configuration object (OnlineAbConfig)', () => {
 
   test('experiment with a configuration object with treatment weights', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Experiment(stack, 'NewExperiment', {
       experimentName: 'experimentWithMetricGoal',
-      project: 'myProject',
+      project: project,
       metricGoals: [],
       onlineAbConfig: new OnlineAbConfig({
         controlTreatmentName: 'defaultTreatment',
@@ -240,10 +260,13 @@ describe('Configuration object (OnlineAbConfig)', () => {
 describe('Experiment Treatments', () => {
   test('experiment with treatments', () => {
     const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
 
     new Experiment(stack, 'NewExperiment', {
       experimentName: 'experimentWithMetricGoal',
-      project: 'myProject',
+      project: project,
       metricGoals: [],
       onlineAbConfig: new OnlineAbConfig({}),
       treatments: [

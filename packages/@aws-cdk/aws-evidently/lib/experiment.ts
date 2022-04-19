@@ -1,7 +1,7 @@
 import { Resource, IResource, Tag, Stack, ArnFormat } from '@aws-cdk/core';
 import { Construct } from 'constructs';
 import { CfnExperiment } from './evidently.generated';
-// import { Construct } from 'constructs';
+import { IProject } from './project';
 
 /**
  * An Evidently Experiment resource
@@ -42,7 +42,7 @@ export interface IExperiment extends IResource {
   /**
    * The name or ARN of the project that this experiment belongs to
    */
-  readonly project: string;
+  readonly project: IProject;
 
   /**
    * Randomization salt
@@ -102,7 +102,7 @@ export interface ExperimentAttributes {
   /**
    * The name or ARN of the project
    */
-  readonly project: string;
+  readonly project: IProject;
 
   /**
    * Traffic sampling rate for the experiment
@@ -127,7 +127,7 @@ abstract class ExperimentBase extends Resource implements IExperiment {
   public abstract readonly experimentName: string;
   public abstract readonly metricGoals: MetricGoal[];
   public abstract readonly onlineAbConfig: OnlineAbConfig;
-  public abstract readonly project: string;
+  public abstract readonly project: IProject;
   // public abstract readonly samplingRate?: ExperimentSamplingRate | number;
   public abstract readonly samplingRate?: number;
   public abstract readonly treatments: Treatment[];
@@ -152,7 +152,7 @@ export interface ExperimentProps {
   /**
    * The name or ARN of the project this experiment belongs to
    */
-  readonly project: string;
+  readonly project: IProject;
   /**
    * Sampling rate of traffic that's diverted to the experiment
    *
@@ -197,7 +197,7 @@ export class Experiment extends ExperimentBase {
   public readonly experimentName: string;
   public readonly metricGoals: MetricGoal[];
   public readonly onlineAbConfig: OnlineAbConfig;
-  public readonly project: string;
+  public readonly project: IProject;
   // public readonly samplingRate?: ExperimentSamplingRate | number;
   public readonly samplingRate?: number;
   public readonly treatments: Treatment[];
@@ -217,7 +217,7 @@ export class Experiment extends ExperimentBase {
 
     this.resource = new CfnExperiment(this, 'Resource', {
       name: props.experimentName,
-      project: props.project,
+      project: props.project.projectArn,
       metricGoals: metricGoals.map(goal => goal._renderMetricGoal()),
       onlineAbConfig: onlineAbConfig._renderOnlineAbConfig(),
       treatments: treatments.map(treatment => treatment._renderTreatment()),
