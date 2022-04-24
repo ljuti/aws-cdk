@@ -164,6 +164,10 @@ export class Feature extends FeatureBase {
 
     const { project, variations } = props;
 
+    if (variations.length < 1) {
+      throw new Error(`You must specify at least one variation for feature ${props.featureName}`);
+    }
+
     this.resource = new CfnFeature(this, 'Resource', {
       name: props.featureName,
       project: props.project.projectArn,

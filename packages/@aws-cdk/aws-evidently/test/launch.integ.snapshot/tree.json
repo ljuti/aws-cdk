@@ -1,0 +1,158 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Construct",
+          "version": "0.0.0"
+        }
+      },
+      "aws-evidently-launch": {
+        "id": "aws-evidently-launch",
+        "path": "aws-evidently-launch",
+        "children": {
+          "MyProject": {
+            "id": "MyProject",
+            "path": "aws-evidently-launch/MyProject",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "aws-evidently-launch/MyProject/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Evidently::Project",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "myProject"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-evidently.CfnProject",
+                  "version": "0.0.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-evidently.Project",
+              "version": "0.0.0"
+            }
+          },
+          "LaunchableEditableGuestbookFeature": {
+            "id": "LaunchableEditableGuestbookFeature",
+            "path": "aws-evidently-launch/LaunchableEditableGuestbookFeature",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "aws-evidently-launch/LaunchableEditableGuestbookFeature/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Evidently::Feature",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "Editing",
+                    "project": {
+                      "Fn::GetAtt": [
+                        "MyProject39F7B0AE",
+                        "Arn"
+                      ]
+                    },
+                    "variations": [
+                      {
+                        "variationName": "editable",
+                        "booleanValue": true
+                      },
+                      {
+                        "variationName": "readonly",
+                        "booleanValue": false
+                      }
+                    ],
+                    "entityOverrides": [
+                      {
+                        "entityId": "seb",
+                        "variation": "editable"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-evidently.CfnFeature",
+                  "version": "0.0.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-evidently.Feature",
+              "version": "0.0.0"
+            }
+          },
+          "LaunchableEditableGuestbookLaunch": {
+            "id": "LaunchableEditableGuestbookLaunch",
+            "path": "aws-evidently-launch/LaunchableEditableGuestbookLaunch",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "aws-evidently-launch/LaunchableEditableGuestbookLaunch/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Evidently::Launch",
+                  "aws:cdk:cloudformation:props": {
+                    "groups": [
+                      {
+                        "feature": {
+                          "Ref": "LaunchableEditableGuestbookFeature1568728C"
+                        },
+                        "groupName": "Editable",
+                        "variation": "editable"
+                      },
+                      {
+                        "feature": {
+                          "Ref": "LaunchableEditableGuestbookFeature1568728C"
+                        },
+                        "groupName": "Readonly",
+                        "variation": "readonly"
+                      }
+                    ],
+                    "name": "LaunchableEditableGuestbook",
+                    "project": {
+                      "Fn::GetAtt": [
+                        "MyProject39F7B0AE",
+                        "Arn"
+                      ]
+                    },
+                    "scheduledSplitsConfig": [
+                      {
+                        "groupWeights": [
+                          {
+                            "groupName": "Editable",
+                            "splitWeight": 50000
+                          }
+                        ],
+                        "startTime": "2025-11-25T23:59:59Z"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-evidently.CfnLaunch",
+                  "version": "0.0.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-evidently.Launch",
+              "version": "0.0.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "0.0.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "@aws-cdk/core.App",
+      "version": "0.0.0"
+    }
+  }
+}

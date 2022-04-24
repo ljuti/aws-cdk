@@ -338,8 +338,8 @@ export class OnlineAbConfig {
   public readonly treatmentWeights?: TreatmentToWeight[];
 
   constructor(props: OnlineAbConfigProps = {}) {
-    this.controlTreatmentName = props.controlTreatmentName;
-    this.treatmentWeights = props.treatmentWeights;
+    this.controlTreatmentName = props.controlTreatmentName || '';
+    this.treatmentWeights = props.treatmentWeights || <TreatmentToWeight[]>[];
   }
 
   /**

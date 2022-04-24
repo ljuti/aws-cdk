@@ -324,3 +324,12 @@ describe('Experiment Treatments', () => {
     });
   });
 });
+
+describe('OnlineAbConfig', () => {
+  test('default configuration', () => {
+    const config = new OnlineAbConfig();
+
+    expect(config.controlTreatmentName).toEqual('');
+    expect(config.treatmentWeights).toEqual([]);
+  });
+});

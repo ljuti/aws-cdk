@@ -10,10 +10,16 @@ describe('AWS Evidently Feature', () => {
       projectName: 'myProject',
     });
 
+    const variation = new Variation({
+      variationName: 'defaultVariation',
+      valueType: VariationValueType.STRING,
+      value: 'foo',
+    });
+
     new Feature(stack, 'NewFeature', {
       featureName: 'myNewFeature',
       project: project,
-      variations: [],
+      variations: [variation],
     });
 
     const template = Template.fromStack(stack);
@@ -77,6 +83,30 @@ describe('Entity Overrides', () => {
 });
 
 describe('Variations', () => {
+  test('variation with no name', () => {
+    const variation = new Variation({
+      valueType: VariationValueType.STRING,
+      value: 'noName',
+    });
+
+    expect(variation.name).toEqual('');
+  });
+
+  test('no variations', () => {
+    const stack = new Stack();
+    const project = new Project(stack, 'MyProject', {
+      projectName: 'myProject',
+    });
+
+    expect(() => {
+      new Feature(stack, 'MyFeature', {
+        featureName: 'StringTypeVariationFeature',
+        project: project,
+        variations: [],
+      });
+    }).toThrowError();
+  });
+
   test('string type variation', () => {
     const stack = new Stack();
     const project = new Project(stack, 'MyProject', {

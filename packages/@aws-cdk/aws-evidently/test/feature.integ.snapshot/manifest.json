@@ -1,0 +1,46 @@
+{
+  "version": "17.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "aws-evidently-feature": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "aws-evidently-feature.template.json",
+        "validateOnSynth": false
+      },
+      "metadata": {
+        "/aws-evidently-feature/MyProject/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyProject39F7B0AE"
+          }
+        ],
+        "/aws-evidently-feature/NewFeature/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NewFeatureAEA83BBF"
+          }
+        ],
+        "/aws-evidently-feature/Project": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Project"
+          }
+        ],
+        "/aws-evidently-feature/Feature": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Feature"
+          }
+        ]
+      },
+      "displayName": "aws-evidently-feature"
+    }
+  }
+}

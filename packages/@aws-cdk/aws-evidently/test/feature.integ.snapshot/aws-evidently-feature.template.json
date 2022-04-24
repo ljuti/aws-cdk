@@ -1,0 +1,40 @@
+{
+ "Resources": {
+  "MyProject39F7B0AE": {
+   "Type": "AWS::Evidently::Project",
+   "Properties": {
+    "Name": "myProject"
+   }
+  },
+  "NewFeatureAEA83BBF": {
+   "Type": "AWS::Evidently::Feature",
+   "Properties": {
+    "Name": "newFeature",
+    "Project": {
+     "Fn::GetAtt": [
+      "MyProject39F7B0AE",
+      "Arn"
+     ]
+    },
+    "Variations": [
+     {
+      "StringValue": "foobar",
+      "VariationName": "defaultVariation"
+     }
+    ]
+   }
+  }
+ },
+ "Outputs": {
+  "Project": {
+   "Value": {
+    "Ref": "MyProject39F7B0AE"
+   }
+  },
+  "Feature": {
+   "Value": {
+    "Ref": "NewFeatureAEA83BBF"
+   }
+  }
+ }
+}

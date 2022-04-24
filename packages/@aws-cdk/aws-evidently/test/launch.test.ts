@@ -1,7 +1,7 @@
 import { Template } from '@aws-cdk/assertions';
 import { Stack } from '@aws-cdk/core';
-import { Launch, Project } from '../lib';
-import { LaunchGroup } from '../lib/launch';
+import { Feature, Launch, Project, Variation, VariationValueType } from '../lib';
+import { LaunchGroup, StepConfig } from '../lib/launch';
 
 describe('An Evidently Launch resource', () => {
   test('creating a new Launch', () => {
@@ -51,15 +51,27 @@ describe('LaunchGroups', () => {
       projectName: 'myTestProject',
     });
 
+    const variation = new Variation({
+      variationName: 'bar',
+      valueType: VariationValueType.STRING,
+      value: 'baz',
+    });
+
+    const feature = new Feature(stack, 'FooFeature', {
+      project: project,
+      featureName: 'fooFeature',
+      variations: [variation],
+    });
+
     new Launch(stack, 'ValidLaunchGroups', {
       launchName: 'aNewLaunch',
       project: project,
       scheduledSplitsConfig: [],
       groups: [
         new LaunchGroup({
-          feature: 'foo',
+          feature: feature,
           groupName: 'fooGroup',
-          variation: 'bar',
+          variation: variation,
           description: 'Foobar',
         }),
       ],
@@ -76,6 +88,18 @@ describe('LaunchGroups', () => {
       projectName: 'myTestProject',
     });
 
+    const variation = new Variation({
+      variationName: 'bar',
+      valueType: VariationValueType.STRING,
+      value: 'baz',
+    });
+
+    const feature = new Feature(stack, 'FooFeature', {
+      project: project,
+      featureName: 'fooFeature',
+      variations: [variation],
+    });
+
     expect(() => {
       new Launch(stack, 'ValidLaunchGroups', {
         launchName: 'aNewLaunch',
@@ -83,13 +107,27 @@ describe('LaunchGroups', () => {
         scheduledSplitsConfig: [],
         groups: [...Array(6)].map(() =>
           new LaunchGroup({
-            feature: 'foo',
+            feature: feature,
             groupName: 'fooGroup',
-            variation: 'bar',
+            variation: variation,
             description: 'Foobar',
           }),
         ),
       });
     }).toThrow();
+  });
+});
+
+describe('StepConfig', () => {
+  test('creating a new StepConfig', () => {
+    const config = new StepConfig({
+      groupWeights: [
+
+      ],
+      startTime: '2025-11-25T23:59:59Z',
+    });
+
+    expect(config.groupWeights).toEqual([]);
+    expect(config.startTime).toEqual('2025-11-25T23:59:59Z');
   });
 });

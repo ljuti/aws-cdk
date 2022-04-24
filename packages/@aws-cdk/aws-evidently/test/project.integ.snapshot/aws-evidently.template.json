@@ -1,0 +1,10 @@
+{
+ "Resources": {
+  "MyProject39F7B0AE": {
+   "Type": "AWS::Evidently::Project",
+   "Properties": {
+    "Name": "myProject"
+   }
+  }
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "Resources": {
+  "MyProject39F7B0AE": {
+   "Type": "AWS::Evidently::Project",
+   "Properties": {
+    "Name": "myProject"
+   }
+  },
+  "LaunchableEditableGuestbookFeature1568728C": {
+   "Type": "AWS::Evidently::Feature",
+   "Properties": {
+    "Name": "Editing",
+    "Project": {
+     "Fn::GetAtt": [
+      "MyProject39F7B0AE",
+      "Arn"
+     ]
+    },
+    "Variations": [
+     {
+      "BooleanValue": true,
+      "VariationName": "editable"
+     },
+     {
+      "BooleanValue": false,
+      "VariationName": "readonly"
+     }
+    ],
+    "EntityOverrides": [
+     {
+      "EntityId": "seb",
+      "Variation": "editable"
+     }
+    ]
+   }
+  },
+  "LaunchableEditableGuestbookLaunchA8C3BFC0": {
+   "Type": "AWS::Evidently::Launch",
+   "Properties": {
+    "Groups": [
+     {
+      "Feature": {
+       "Ref": "LaunchableEditableGuestbookFeature1568728C"
+      },
+      "GroupName": "Editable",
+      "Variation": "editable"
+     },
+     {
+      "Feature": {
+       "Ref": "LaunchableEditableGuestbookFeature1568728C"
+      },
+      "GroupName": "Readonly",
+      "Variation": "readonly"
+     }
+    ],
+    "Name": "LaunchableEditableGuestbook",
+    "Project": {
+     "Fn::GetAtt": [
+      "MyProject39F7B0AE",
+      "Arn"
+     ]
+    },
+    "ScheduledSplitsConfig": [
+     {
+      "GroupWeights": [
+       {
+        "GroupName": "Editable",
+        "SplitWeight": 50000
+       }
+      ],
+      "StartTime": "2025-11-25T23:59:59Z"
+     }
+    ]
+   }
+  }
+ }
+}

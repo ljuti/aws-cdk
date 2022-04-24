@@ -1,0 +1,55 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Construct",
+          "version": "0.0.0"
+        }
+      },
+      "aws-evidently": {
+        "id": "aws-evidently",
+        "path": "aws-evidently",
+        "children": {
+          "MyProject": {
+            "id": "MyProject",
+            "path": "aws-evidently/MyProject",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "aws-evidently/MyProject/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Evidently::Project",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "myProject"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-evidently.CfnProject",
+                  "version": "0.0.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-evidently.Project",
+              "version": "0.0.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "0.0.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "@aws-cdk/core.App",
+      "version": "0.0.0"
+    }
+  }
+}

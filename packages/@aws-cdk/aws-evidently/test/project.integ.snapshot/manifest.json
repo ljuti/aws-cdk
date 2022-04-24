@@ -1,0 +1,28 @@
+{
+  "version": "17.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "aws-evidently": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "aws-evidently.template.json",
+        "validateOnSynth": false
+      },
+      "metadata": {
+        "/aws-evidently/MyProject/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyProject39F7B0AE"
+          }
+        ]
+      },
+      "displayName": "aws-evidently"
+    }
+  }
+}

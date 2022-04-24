@@ -1,6 +1,7 @@
 import { Resource, IResource, Tag, Stack, ArnFormat } from '@aws-cdk/core';
 import { Construct } from 'constructs';
 import { CfnLaunch } from './evidently.generated';
+import { IFeature, Variation } from './feature';
 import { IProject } from './project';
 
 /**
@@ -81,6 +82,14 @@ export interface LaunchAttributes {
   */
 
   readonly scheduledSplitsConfig: StepConfig[];
+
+  /**
+   * An optional description for the launch
+   *
+   * @required false
+   * @default - a description of the launch
+   */
+  readonly description?: string;
 }
 
 /**
@@ -114,6 +123,13 @@ export interface LaunchProps {
    * An array of structures that define the traffic allocation percentages among the feature variations during each step of the launch.
    */
   readonly scheduledSplitsConfig: StepConfig[];
+  /**
+   * A description of the launch
+   *
+   * @required false
+   * @default - a description for the launch
+   */
+  readonly description?: string;
 }
 
 /**
@@ -148,6 +164,7 @@ export class Launch extends LaunchBase {
       public readonly launchName = Stack.of(scope).splitArn(attrs.launchArn, ArnFormat.SLASH_RESOURCE_NAME).resourceName!;
       public readonly groups = attrs.groups;
       public readonly project = attrs.project;
+      public readonly description? = attrs.description;
       public readonly scheduledSplitsConfig = attrs.scheduledSplitsConfig;
     }
 
@@ -159,6 +176,10 @@ export class Launch extends LaunchBase {
   public readonly groups: LaunchGroup[];
   public readonly project: IProject;
   public readonly scheduledSplitsConfig: StepConfig[];
+  /**
+   * A description for the launch
+   */
+  public readonly description?: string;
 
   private readonly resource: CfnLaunch;
 
@@ -167,7 +188,7 @@ export class Launch extends LaunchBase {
       physicalName: props.launchName,
     });
 
-    const { groups, scheduledSplitsConfig, project } = props;
+    const { groups, scheduledSplitsConfig, project, description } = props;
 
     if (groups.length > 5) {
       throw new Error(`A launch can have up to five launch groups. You have specified ${groups.length} groups.`);
@@ -183,6 +204,7 @@ export class Launch extends LaunchBase {
     this.project = project;
     this.groups = groups;
     this.scheduledSplitsConfig = scheduledSplitsConfig;
+    this.description = description || '';
 
     this.launchArn = this.getResourceArnAttribute(this.resource.attrArn, {
       service: 'evidently',
@@ -196,9 +218,9 @@ export class Launch extends LaunchBase {
   private renderGroups(groups: LaunchGroup[]) {
     return groups.map((group) => {
       return {
-        feature: group.feature,
+        feature: group.feature.featureName,
         groupName: group.groupName,
-        variation: group.variation,
+        variation: group.variation.name,
         description: group.description,
       };
     });
@@ -209,9 +231,9 @@ export class Launch extends LaunchBase {
  * A structure that defines one launch group in a launch. A launch group is a variation of the feature that you are including in the launch.
  */
 export class LaunchGroup implements ILaunchGroup {
-  public readonly feature: string;
+  public readonly feature: IFeature;
   public readonly groupName: string;
-  public readonly variation: string;
+  public readonly variation: Variation;
   public readonly description?: string;
 
   constructor(props: LaunchGroupProps) {
@@ -229,7 +251,7 @@ export interface LaunchGroupProps {
   /**
    * The feature that this launch is using.
    */
-  readonly feature: string;
+  readonly feature: IFeature;
   /**
    * A name for this launch group. It can include up to 127 characters.
    */
@@ -237,7 +259,7 @@ export interface LaunchGroupProps {
   /**
    * The feature variation to use for this launch group.
    */
-  readonly variation: string;
+  readonly variation: Variation;
   /**
    * A description of the launch group.
    *
@@ -254,7 +276,7 @@ export interface ILaunchGroup {
   /**
    * The feature that this launch is using.
    */
-  readonly feature: string;
+  readonly feature: IFeature;
 
   /**
    * A name for this launch group. It can include up to 127 characters.
@@ -264,7 +286,7 @@ export interface ILaunchGroup {
   /**
    * The feature variation to use for this launch group.
    */
-  readonly variation: string;
+  readonly variation: Variation;
 
   /**
    * A description of the launch group.
@@ -311,7 +333,7 @@ export interface MetricDefinitionObject {
 /**
  * A structure that defines when each step of the launch is to start, and how much launch traffic is to be allocated to each variation during each step.
  */
-export interface StepConfig {
+export interface IStepConfig {
   /**
    * An array of structures that define how much launch traffic to allocate to each launch group during this step of the launch.
    */
@@ -321,6 +343,39 @@ export interface StepConfig {
    * The date and time to start this step of the launch. Use UTC format, yyyy-MM-ddTHH:mm:ssZ.
    */
   readonly startTime: string;
+}
+
+/**
+ * Properties for a StepConfig object
+ */
+export interface StepConfigProps {
+  /**
+   * An array of structures that define how much launch traffic to allocate to each launch group during this step of the launch.
+   */
+  readonly groupWeights: GroupToWeight[];
+  /**
+   * The date and time to start this step of the launch. Use UTC format, yyyy-MM-ddTHH:mm:ssZ.
+   */
+  readonly startTime: string;
+}
+
+/**
+ * A structure that defines when each step of the launch is to start, and how much launch traffic is to be allocated to each variation during each step.
+ */
+export class StepConfig implements IStepConfig {
+  /**
+   * An array of structures that define how much launch traffic to allocate to each launch group during this step of the launch.
+   */
+  public readonly groupWeights: GroupToWeight[];
+  /**
+   * The date and time to start this step of the launch. Use UTC format, yyyy-MM-ddTHH:mm:ssZ.
+   */
+  public readonly startTime: string;
+
+  constructor(props: StepConfigProps) {
+    this.groupWeights = props.groupWeights;
+    this.startTime = props.startTime;
+  }
 }
 
 /**

@@ -1,0 +1,107 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Construct",
+          "version": "0.0.0"
+        }
+      },
+      "aws-evidently-feature": {
+        "id": "aws-evidently-feature",
+        "path": "aws-evidently-feature",
+        "children": {
+          "MyProject": {
+            "id": "MyProject",
+            "path": "aws-evidently-feature/MyProject",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "aws-evidently-feature/MyProject/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Evidently::Project",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "myProject"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-evidently.CfnProject",
+                  "version": "0.0.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-evidently.Project",
+              "version": "0.0.0"
+            }
+          },
+          "NewFeature": {
+            "id": "NewFeature",
+            "path": "aws-evidently-feature/NewFeature",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "aws-evidently-feature/NewFeature/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Evidently::Feature",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "newFeature",
+                    "project": {
+                      "Fn::GetAtt": [
+                        "MyProject39F7B0AE",
+                        "Arn"
+                      ]
+                    },
+                    "variations": [
+                      {
+                        "variationName": "defaultVariation",
+                        "stringValue": "foobar"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-evidently.CfnFeature",
+                  "version": "0.0.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-evidently.Feature",
+              "version": "0.0.0"
+            }
+          },
+          "Project": {
+            "id": "Project",
+            "path": "aws-evidently-feature/Project",
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.CfnOutput",
+              "version": "0.0.0"
+            }
+          },
+          "Feature": {
+            "id": "Feature",
+            "path": "aws-evidently-feature/Feature",
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.CfnOutput",
+              "version": "0.0.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "0.0.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "@aws-cdk/core.App",
+      "version": "0.0.0"
+    }
+  }
+}
