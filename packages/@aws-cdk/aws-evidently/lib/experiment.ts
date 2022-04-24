@@ -1,6 +1,7 @@
 import { Resource, IResource, Tag, Stack, ArnFormat } from '@aws-cdk/core';
 import { Construct } from 'constructs';
 import { CfnExperiment } from './evidently.generated';
+import { IFeature, Variation } from './feature';
 import { IProject } from './project';
 
 /**
@@ -40,7 +41,7 @@ export interface IExperiment extends IResource {
   readonly onlineAbConfig: OnlineAbConfig;
 
   /**
-   * The name or ARN of the project that this experiment belongs to
+   * The Evidently Project that this experiment belongs to
    */
   readonly project: IProject;
 
@@ -100,7 +101,7 @@ export interface ExperimentAttributes {
   readonly onlineAbConfig: OnlineAbConfig;
 
   /**
-   * The name or ARN of the project
+   * The Evidently Project this experiment belongs to
    */
   readonly project: IProject;
 
@@ -110,7 +111,6 @@ export interface ExperimentAttributes {
    * @required false
    * @default -
    */
-  // readonly samplingRate?: ExperimentSamplingRate | number;
   readonly samplingRate?: number;
 
   /**
@@ -149,7 +149,7 @@ export interface ExperimentProps {
    */
   readonly onlineAbConfig: OnlineAbConfig;
   /**
-   * The name or ARN of the project this experiment belongs to
+   * The Evidently Project this experiment belongs to
    */
   readonly project: IProject;
   /**
@@ -337,7 +337,7 @@ export class OnlineAbConfig {
    */
   public readonly treatmentWeights?: TreatmentToWeight[];
 
-  constructor(props: OnlineAbConfigProps) {
+  constructor(props: OnlineAbConfigProps = {}) {
     this.controlTreatmentName = props.controlTreatmentName;
     this.treatmentWeights = props.treatmentWeights;
   }
@@ -386,7 +386,7 @@ export class Treatment {
   /**
    * Feature this treatment belongs to
    */
-  public readonly feature: string;
+  public readonly feature: IFeature;
   /**
    * The name of the treatment
    */
@@ -394,7 +394,7 @@ export class Treatment {
   /**
    * The variation this treatment is used for
    */
-  public readonly variation: string;
+  public readonly variation: Variation;
 
   constructor(props: TreatmentProps) {
     this.description = props.description;
@@ -410,9 +410,9 @@ export class Treatment {
   public _renderTreatment(): CfnExperiment.TreatmentObjectProperty {
     return {
       description: this.description,
-      feature: this.feature,
+      feature: this.feature.featureArn,
       treatmentName: this.treatmentName,
-      variation: this.variation,
+      variation: this.variation.name,
     };
   }
 }
@@ -431,7 +431,7 @@ export interface TreatmentProps {
   /**
    * Feature this treatment belongs to
    */
-  readonly feature: string;
+  readonly feature: IFeature;
   /**
    * The name of the treatment
    */
@@ -439,7 +439,7 @@ export interface TreatmentProps {
   /**
    * The variation this treatment is used for
    */
-  readonly variation: string;
+  readonly variation: Variation;
 }
 
 /**

@@ -1,6 +1,6 @@
 import { Template } from '@aws-cdk/assertions';
 import { Stack } from '@aws-cdk/core';
-import { Experiment, MetricGoal, MetricGoalDesiredChange, OnlineAbConfig, Project, Treatment, TreatmentToWeight } from '../lib';
+import { Experiment, Feature, MetricGoal, MetricGoalDesiredChange, OnlineAbConfig, Project, Treatment, TreatmentToWeight, Variation, VariationValueType } from '../lib';
 
 describe('AWS Evidently Experiment', () => {
   test('creating a new experiment', () => {
@@ -226,10 +226,22 @@ describe('Configuration object (OnlineAbConfig)', () => {
       projectName: 'myProject',
     });
 
+    const variation = new Variation({
+      variationName: 'String variation',
+      valueType: VariationValueType.STRING,
+      value: 'foobar',
+    });
+
+    const feature = new Feature(stack, 'MyFeature', {
+      project: project,
+      featureName: 'myFeature',
+      variations: [variation],
+    });
+
     const treatment = new Treatment({
-      feature: 'myFeature',
+      feature: feature,
       treatmentName: 'defaultTreatment',
-      variation: 'defaultVariation',
+      variation: variation,
       description: 'This is a default treatment',
     });
 
@@ -271,6 +283,20 @@ describe('Experiment Treatments', () => {
       projectName: 'myProject',
     });
 
+    const variation = new Variation({
+      variationName: 'String variation',
+      valueType: VariationValueType.STRING,
+      value: 'foobar',
+    });
+
+    const feature = new Feature(stack, 'MyFeature', {
+      project: project,
+      featureName: 'myFeature',
+      variations: [
+        variation,
+      ],
+    });
+
     new Experiment(stack, 'NewExperiment', {
       experimentName: 'experimentWithMetricGoal',
       project: project,
@@ -278,9 +304,9 @@ describe('Experiment Treatments', () => {
       onlineAbConfig: new OnlineAbConfig({}),
       treatments: [
         new Treatment({
-          feature: 'myFeature',
+          feature: feature,
           treatmentName: 'defaultTreatment',
-          variation: 'defaultVariation',
+          variation: variation,
           description: 'This is a default treatment',
         }),
       ],
@@ -290,9 +316,8 @@ describe('Experiment Treatments', () => {
     template.hasResourceProperties('AWS::Evidently::Experiment', {
       Treatments: [
         {
-          Feature: 'myFeature',
           TreatmentName: 'defaultTreatment',
-          Variation: 'defaultVariation',
+          Variation: 'String variation',
           Description: 'This is a default treatment',
         },
       ],

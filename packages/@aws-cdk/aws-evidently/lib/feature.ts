@@ -251,7 +251,7 @@ export class Variation {
   /**
    * A name for the variation. It can include up to 127 characters.
    */
-  public readonly name: string | undefined;
+  public readonly name: string;
   /**
    * The type of the variation value.
    */
@@ -262,8 +262,7 @@ export class Variation {
   public readonly value: boolean | number | string;
 
   constructor(props: VariationProps) {
-    this.name = props.variationName;
-
+    this.name = props.variationName || '';
     this.valueType = props.valueType;
     this.value = props.value;
   }
