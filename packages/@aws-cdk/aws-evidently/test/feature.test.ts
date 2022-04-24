@@ -1,6 +1,6 @@
 import { Template } from '@aws-cdk/assertions';
 import { Stack } from '@aws-cdk/core';
-import { EntityOverride, Feature, VariationObject, VariationObjectValueType, Project } from '../lib';
+import { EntityOverride, Feature, Variation, VariationValueType, Project } from '../lib';
 
 
 describe('AWS Evidently Feature', () => {
@@ -50,9 +50,9 @@ describe('Entity Overrides', () => {
       featureName: 'withOverrides',
       project: project,
       variations: [
-        new VariationObject({
+        new Variation({
           variationName: 'bar',
-          valueType: VariationObjectValueType.STRING,
+          valueType: VariationValueType.STRING,
           value: 'hello',
         }),
       ],
@@ -87,9 +87,9 @@ describe('Variations', () => {
       featureName: 'StringTypeVariationFeature',
       project: project,
       variations: [
-        new VariationObject({
+        new Variation({
           variationName: 'String variation',
-          valueType: VariationObjectValueType.STRING,
+          valueType: VariationValueType.STRING,
           value: 'foobar',
         }),
       ],
@@ -117,9 +117,9 @@ describe('Variations', () => {
       featureName: 'BooleanTypeVariationFeature',
       project: project,
       variations: [
-        new VariationObject({
+        new Variation({
           variationName: 'Boolean variation',
-          valueType: VariationObjectValueType.BOOLEAN,
+          valueType: VariationValueType.BOOLEAN,
           value: true,
         }),
       ],
@@ -147,9 +147,9 @@ describe('Variations', () => {
       featureName: 'DoubleTypeVariationFeature',
       project: project,
       variations: [
-        new VariationObject({
+        new Variation({
           variationName: 'Double variation',
-          valueType: VariationObjectValueType.DOUBLE,
+          valueType: VariationValueType.DOUBLE,
           value: 123456789,
         }),
       ],
@@ -177,9 +177,9 @@ describe('Variations', () => {
       featureName: 'LongTypeVariationFeature',
       project: project,
       variations: [
-        new VariationObject({
+        new Variation({
           variationName: 'Long variation',
-          valueType: VariationObjectValueType.LONG,
+          valueType: VariationValueType.LONG,
           value: 123456789,
         }),
       ],

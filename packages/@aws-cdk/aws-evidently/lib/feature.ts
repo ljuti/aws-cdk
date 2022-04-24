@@ -66,7 +66,7 @@ export interface IFeature extends IResource {
   /**
    * An array of structures that contain the configuration of the feature's different variations.
    */
-  readonly variations: VariationObject[];
+  readonly variations: Variation[];
 }
 
 /**
@@ -86,7 +86,7 @@ export interface FeatureAttributes {
   /**
    * Variations
    */
-  readonly variations: VariationObject[];
+  readonly variations: Variation[];
 }
 
 /**
@@ -96,7 +96,7 @@ abstract class FeatureBase extends Resource implements IFeature {
   public abstract readonly featureArn: string;
   public abstract readonly featureName: string;
   public abstract readonly project: IProject;
-  public abstract readonly variations: VariationObject[];
+  public abstract readonly variations: Variation[];
 }
 
 /**
@@ -116,7 +116,7 @@ export interface FeatureProps {
   /**
    * Variations
    */
-  readonly variations: VariationObject[];
+  readonly variations: Variation[];
 
   /**
    * Entity overrides
@@ -153,7 +153,7 @@ export class Feature extends FeatureBase {
   public readonly featureArn: string;
   public readonly featureName: string;
   public readonly project: IProject;
-  public readonly variations: VariationObject[];
+  public readonly variations: Variation[];
 
   private readonly resource: CfnFeature;
 
@@ -247,7 +247,7 @@ export enum EvaluationStrategy {
 /**
  * This structure contains the name and variation value of one variation of a feature.
  */
-export class VariationObject {
+export class Variation {
   /**
    * A name for the variation. It can include up to 127 characters.
    */
@@ -255,13 +255,13 @@ export class VariationObject {
   /**
    * The type of the variation value.
    */
-  public readonly valueType: VariationObjectValueType;
+  public readonly valueType: VariationValueType;
   /**
    * The value assigned to this variation.
    */
   public readonly value: boolean | number | string;
 
-  constructor(props: VariationObjectProps) {
+  constructor(props: VariationProps) {
     this.name = props.variationName;
 
     this.valueType = props.valueType;
@@ -283,30 +283,30 @@ export class VariationObject {
   }
 
   private isBoolean() {
-    return (this.valueType === VariationObjectValueType.BOOLEAN);
+    return (this.valueType === VariationValueType.BOOLEAN);
   }
 
   private isDouble() {
-    return (this.valueType === VariationObjectValueType.DOUBLE);
+    return (this.valueType === VariationValueType.DOUBLE);
   }
 
   private isLong() {
-    return (this.valueType === VariationObjectValueType.LONG);
+    return (this.valueType === VariationValueType.LONG);
   }
 
   private isString() {
-    return (this.valueType === VariationObjectValueType.STRING);
+    return (this.valueType === VariationValueType.STRING);
   }
 }
 
 /**
- * The properties of a VariationObject
+ * The properties of a Variation
  */
-export interface VariationObjectProps {
+export interface VariationProps {
   /**
    * Variation value type
    */
-  readonly valueType: VariationObjectValueType;
+  readonly valueType: VariationValueType;
   /**
    * Value assigned to the variation
    */
@@ -321,9 +321,9 @@ export interface VariationObjectProps {
 }
 
 /**
- * Variation value types for VariationObject
+ * Variation value types for Variation
  */
-export enum VariationObjectValueType {
+export enum VariationValueType {
   /**
    * Boolean value type
    */

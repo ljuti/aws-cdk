@@ -1,6 +1,6 @@
 import { Template } from '@aws-cdk/assertions';
 import { Stack } from '@aws-cdk/core';
-import { Experiment, MetricGoal, OnlineAbConfig, Project, Treatment, TreatmentToWeight } from '../lib';
+import { Experiment, MetricGoal, MetricGoalDesiredChange, OnlineAbConfig, Project, Treatment, TreatmentToWeight } from '../lib';
 
 describe('AWS Evidently Experiment', () => {
   test('creating a new experiment', () => {
@@ -57,7 +57,7 @@ describe('MetricGoals for an Experiment', () => {
       project: project,
       metricGoals: [
         new MetricGoal({
-          desiredChange: 'INCREASE',
+          desiredChange: MetricGoalDesiredChange.INCREASE,
           entityIdKey: 'user',
           eventPattern: 'user-metric',
           metricName: 'userMetric',
@@ -72,7 +72,7 @@ describe('MetricGoals for an Experiment', () => {
     template.hasResourceProperties('AWS::Evidently::Experiment', {
       MetricGoals: [
         {
-          DesiredChange: 'INCREASE',
+          DesiredChange: MetricGoalDesiredChange.INCREASE,
           EntityIdKey: 'user',
           EventPattern: 'user-metric',
           MetricName: 'userMetric',
@@ -93,21 +93,21 @@ describe('MetricGoals for an Experiment', () => {
       project: project,
       metricGoals: [
         new MetricGoal({
-          desiredChange: 'INCREASE',
+          desiredChange: MetricGoalDesiredChange.INCREASE,
           entityIdKey: 'user',
           eventPattern: 'user-metric',
           metricName: 'userMetric',
           valueKey: 'foo',
         }),
         new MetricGoal({
-          desiredChange: 'DECREASE',
+          desiredChange: MetricGoalDesiredChange.DECREASE,
           entityIdKey: 'latency',
           eventPattern: 'latency-metric',
           metricName: 'latencyMetric',
           valueKey: 'bar',
         }),
         new MetricGoal({
-          desiredChange: 'INCREASE',
+          desiredChange: MetricGoalDesiredChange.INCREASE,
           entityIdKey: 'product',
           eventPattern: 'revenue-metric',
           metricName: 'revenueMetric',
@@ -122,21 +122,21 @@ describe('MetricGoals for an Experiment', () => {
     template.hasResourceProperties('AWS::Evidently::Experiment', {
       MetricGoals: [
         {
-          DesiredChange: 'INCREASE',
+          DesiredChange: MetricGoalDesiredChange.INCREASE,
           EntityIdKey: 'user',
           EventPattern: 'user-metric',
           MetricName: 'userMetric',
           ValueKey: 'foo',
         },
         {
-          DesiredChange: 'DECREASE',
+          DesiredChange: MetricGoalDesiredChange.DECREASE,
           EntityIdKey: 'latency',
           EventPattern: 'latency-metric',
           MetricName: 'latencyMetric',
           ValueKey: 'bar',
         },
         {
-          DesiredChange: 'INCREASE',
+          DesiredChange: MetricGoalDesiredChange.INCREASE,
           EntityIdKey: 'product',
           EventPattern: 'revenue-metric',
           MetricName: 'revenueMetric',
@@ -158,28 +158,28 @@ describe('MetricGoals for an Experiment', () => {
         project: project,
         metricGoals: [
           new MetricGoal({
-            desiredChange: 'INCREASE',
+            desiredChange: MetricGoalDesiredChange.INCREASE,
             entityIdKey: 'user',
             eventPattern: 'user-metric',
             metricName: 'userMetric',
             valueKey: 'foo',
           }),
           new MetricGoal({
-            desiredChange: 'DECREASE',
+            desiredChange: MetricGoalDesiredChange.DECREASE,
             entityIdKey: 'latency',
             eventPattern: 'latency-metric',
             metricName: 'latencyMetric',
             valueKey: 'bar',
           }),
           new MetricGoal({
-            desiredChange: 'INCREASE',
+            desiredChange: MetricGoalDesiredChange.INCREASE,
             entityIdKey: 'product',
             eventPattern: 'revenue-metric',
             metricName: 'revenueMetric',
             valueKey: 'baz',
           }),
           new MetricGoal({
-            desiredChange: 'INCREASE',
+            desiredChange: MetricGoalDesiredChange.INCREASE,
             entityIdKey: 'product',
             eventPattern: 'revenue-metric',
             metricName: 'revenueMetric',
@@ -226,6 +226,13 @@ describe('Configuration object (OnlineAbConfig)', () => {
       projectName: 'myProject',
     });
 
+    const treatment = new Treatment({
+      feature: 'myFeature',
+      treatmentName: 'defaultTreatment',
+      variation: 'defaultVariation',
+      description: 'This is a default treatment',
+    });
+
     new Experiment(stack, 'NewExperiment', {
       experimentName: 'experimentWithMetricGoal',
       project: project,
@@ -235,11 +242,11 @@ describe('Configuration object (OnlineAbConfig)', () => {
         treatmentWeights: [
           new TreatmentToWeight({
             splitWeight: 20000,
-            treatment: 'defaultTreatment',
+            treatment: treatment,
           }),
         ],
       }),
-      treatments: [],
+      treatments: [treatment],
     });
 
     const template = Template.fromStack(stack);

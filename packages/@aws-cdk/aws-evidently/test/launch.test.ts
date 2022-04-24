@@ -1,7 +1,7 @@
 import { Template } from '@aws-cdk/assertions';
 import { Stack } from '@aws-cdk/core';
 import { Launch, Project } from '../lib';
-import { LaunchGroupObject } from '../lib/launch';
+import { LaunchGroup } from '../lib/launch';
 
 describe('An Evidently Launch resource', () => {
   test('creating a new Launch', () => {
@@ -43,20 +43,20 @@ describe('An Evidently Launch resource', () => {
   });
 });
 
-describe('LaunchGroupObjects', () => {
-  test('a new launch with allowed number of LaunchGroupObjects', () => {
+describe('LaunchGroups', () => {
+  test('a new launch with allowed number of LaunchGroups', () => {
     const stack = new Stack();
 
     const project = new Project(stack, 'TestProject', {
       projectName: 'myTestProject',
     });
 
-    new Launch(stack, 'ValidLaunchGroupObjects', {
+    new Launch(stack, 'ValidLaunchGroups', {
       launchName: 'aNewLaunch',
       project: project,
       scheduledSplitsConfig: [],
       groups: [
-        new LaunchGroupObject({
+        new LaunchGroup({
           feature: 'foo',
           groupName: 'fooGroup',
           variation: 'bar',
@@ -69,7 +69,7 @@ describe('LaunchGroupObjects', () => {
     template.resourceCountIs('AWS::Evidently::Launch', 1);
   });
 
-  test('a new launch with more than five LaunchGroupObjects', () => {
+  test('a new launch with more than five LaunchGroups', () => {
     const stack = new Stack();
 
     const project = new Project(stack, 'TestProject', {
@@ -77,12 +77,12 @@ describe('LaunchGroupObjects', () => {
     });
 
     expect(() => {
-      new Launch(stack, 'ValidLaunchGroupObjects', {
+      new Launch(stack, 'ValidLaunchGroups', {
         launchName: 'aNewLaunch',
         project: project,
         scheduledSplitsConfig: [],
         groups: [...Array(6)].map(() =>
-          new LaunchGroupObject({
+          new LaunchGroup({
             feature: 'foo',
             groupName: 'fooGroup',
             variation: 'bar',

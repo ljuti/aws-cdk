@@ -128,7 +128,6 @@ abstract class ExperimentBase extends Resource implements IExperiment {
   public abstract readonly metricGoals: MetricGoal[];
   public abstract readonly onlineAbConfig: OnlineAbConfig;
   public abstract readonly project: IProject;
-  // public abstract readonly samplingRate?: ExperimentSamplingRate | number;
   public abstract readonly samplingRate?: number;
   public abstract readonly treatments: Treatment[];
 }
@@ -159,7 +158,6 @@ export interface ExperimentProps {
    * @required false
    * @default -
    */
-  // readonly samplingRate?: ExperimentSamplingRate | number;
   readonly samplingRate?: number;
   /**
    * Treatments
@@ -198,7 +196,6 @@ export class Experiment extends ExperimentBase {
   public readonly metricGoals: MetricGoal[];
   public readonly onlineAbConfig: OnlineAbConfig;
   public readonly project: IProject;
-  // public readonly samplingRate?: ExperimentSamplingRate | number;
   public readonly samplingRate?: number;
   public readonly treatments: Treatment[];
 
@@ -246,7 +243,7 @@ export class MetricGoal {
   /**
    * Desired change for the variation
    */
-  public readonly desiredChange: string;
+  public readonly desiredChange: MetricGoalDesiredChange;
   /**
    * The entity, such as a user or session, that does an action that causes a metric value to be recorded.
    */
@@ -301,7 +298,7 @@ export interface MetricGoalProps {
   /**
    * Desired change for the variation.
    */
-  readonly desiredChange: string;
+  readonly desiredChange: MetricGoalDesiredChange;
   /**
    * The entity, such as a user or session, that does an action that causes a metric value to be recorded.
    */
@@ -457,7 +454,7 @@ export class TreatmentToWeight {
   /**
    * The name of the treatment.
    */
-  public readonly treatment: string;
+  public readonly treatment: Treatment;
 
   constructor(props: TreatmentToWeightProps) {
     this.splitWeight = props.splitWeight;
@@ -471,7 +468,7 @@ export class TreatmentToWeight {
   public _renderWeight(): CfnExperiment.TreatmentToWeightProperty {
     return {
       splitWeight: this.splitWeight,
-      treatment: this.treatment,
+      treatment: this.treatment.treatmentName,
     };
   }
 }
@@ -481,14 +478,29 @@ export class TreatmentToWeight {
  */
 export interface TreatmentToWeightProps {
   /**
-   * The portion of experiment traffic to allocate to this treatment
+   * The portion of experiment traffic to allocate to this treatment. Specify the traffic portion in thousandths of a percent,
+   * so 20,000 allocated to a treatment would allocate 20% of the experiment traffic to that treatment.
    */
-  // readonly splitWeight: TreatmentSplitWeight | number;
   readonly splitWeight: number;
   /**
    * The name of a treatment
    */
-  readonly treatment: string;
+  readonly treatment: Treatment;
+}
+
+/**
+ * Option for Metric Goal
+ */
+export enum MetricGoalDesiredChange {
+  /**
+   * A desired increase in the metric value
+   */
+  'INCREASE' = 'INCREASE',
+
+  /**
+   * A desired decrease in the metric value
+   */
+  'DECREASE' = 'DECREASE',
 }
 
 // /**

@@ -23,7 +23,7 @@ export interface ILaunch extends IResource {
   /**
    * An array of structures that contains the feature and variations that are to be used for the launch.
    */
-  readonly groups: LaunchGroupObject[];
+  readonly groups: LaunchGroup[];
   /**
    * An array of structures that define the metrics that will be used to monitor the launch performance.
    */
@@ -74,7 +74,7 @@ export interface LaunchAttributes {
   /**
    * An array of structures that contains the feature and variations that are to be used for the launch.
    */
-  readonly groups: LaunchGroupObject[];
+  readonly groups: LaunchGroup[];
 
   /**
    * An array of structures that define the traffic allocation percentages among the feature variations during each step of the launch.
@@ -89,7 +89,7 @@ export interface LaunchAttributes {
 abstract class LaunchBase extends Resource implements ILaunch {
   public abstract readonly launchArn: string;
   public abstract readonly launchName: string;
-  public abstract readonly groups: LaunchGroupObject[];
+  public abstract readonly groups: LaunchGroup[];
   public abstract readonly project: IProject;
   public abstract readonly scheduledSplitsConfig: StepConfig[];
 }
@@ -109,7 +109,7 @@ export interface LaunchProps {
   /**
    * An array of structures that contains the feature and variations that are to be used for the launch.
    */
-  readonly groups: LaunchGroupObject[];
+  readonly groups: LaunchGroup[];
   /**
    * An array of structures that define the traffic allocation percentages among the feature variations during each step of the launch.
    */
@@ -156,7 +156,7 @@ export class Launch extends LaunchBase {
 
   public readonly launchArn: string;
   public readonly launchName: string;
-  public readonly groups: LaunchGroupObject[];
+  public readonly groups: LaunchGroup[];
   public readonly project: IProject;
   public readonly scheduledSplitsConfig: StepConfig[];
 
@@ -193,7 +193,7 @@ export class Launch extends LaunchBase {
     this.launchName = this.getResourceNameAttribute(this.resource.ref);
   }
 
-  private renderGroups(groups: LaunchGroupObject[]) {
+  private renderGroups(groups: LaunchGroup[]) {
     return groups.map((group) => {
       return {
         feature: group.feature,
@@ -208,13 +208,13 @@ export class Launch extends LaunchBase {
 /**
  * A structure that defines one launch group in a launch. A launch group is a variation of the feature that you are including in the launch.
  */
-export class LaunchGroupObject implements ILaunchGroupObject {
+export class LaunchGroup implements ILaunchGroup {
   public readonly feature: string;
   public readonly groupName: string;
   public readonly variation: string;
   public readonly description?: string;
 
-  constructor(props: LaunchGroupObjectProps) {
+  constructor(props: LaunchGroupProps) {
     this.feature = props.feature;
     this.groupName = props.groupName;
     this.variation = props.variation;
@@ -223,9 +223,9 @@ export class LaunchGroupObject implements ILaunchGroupObject {
 }
 
 /**
- * Properties for a LaunchGroupObject
+ * Properties for a LaunchGroup
  */
-export interface LaunchGroupObjectProps {
+export interface LaunchGroupProps {
   /**
    * The feature that this launch is using.
    */
@@ -250,7 +250,7 @@ export interface LaunchGroupObjectProps {
 /**
  * A structure that defines one launch group in a launch. A launch group is a variation of the feature that you are including in the launch.
  */
-export interface ILaunchGroupObject {
+export interface ILaunchGroup {
   /**
    * The feature that this launch is using.
    */
