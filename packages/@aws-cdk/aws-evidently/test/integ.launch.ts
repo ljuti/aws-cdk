@@ -49,6 +49,7 @@ class LaunchStack extends cdk.Stack {
       variation: readonly,
     });
 
+    const launchTime = '2025-11-25T23:59:59Z';
     const launchConfiguration = new evidently.StepConfig({
       groupWeights: [
         {
@@ -56,7 +57,7 @@ class LaunchStack extends cdk.Stack {
           splitWeight: 50000,
         },
       ],
-      startTime: '2025-11-25T23:59:59Z',
+      startTime: launchTime,
     });
 
     new evidently.Launch(this, 'LaunchableEditableGuestbookLaunch', {
